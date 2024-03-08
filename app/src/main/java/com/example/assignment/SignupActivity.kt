@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.example.assignment.R
 
 class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,30 +12,20 @@ class SignupActivity : AppCompatActivity() {
         setContentView(R.layout.signup)
 
         val btnSignup: Button = findViewById(R.id.btnSignup)
-        val etFullName: EditText = findViewById(R.id.etUsername)
-        val etEmail: EditText = findViewById(R.id.etEmail)
+        val etUsername: EditText = findViewById(R.id.etUsername)
         val etPassword: EditText = findViewById(R.id.etPassword)
 
         btnSignup.setOnClickListener {
             // Handle signup button click
-            val fullName = etFullName.text.toString()
-            val email = etEmail.text.toString()
-            // Implement signup logic here
-            // Store email and password locally
-            val userCredentials = Pair(email, etPassword)
-            saveUserCredentialsLocally(userCredentials)
+            val username = etUsername.text.toString()
+            val password = etPassword.text.toString()
+
+            // Store username and password in the SQLite database
+            val databaseHelper = DatabaseHelper(this)
+            databaseHelper.insertCredentials(username, password)
+
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    private fun saveUserCredentialsLocally(credentials: Pair<String, EditText>) {
-        // Implement local storage logic here
-        // For simplicity, you can use SharedPreferences or Room Database to store user credentials
-        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("email", credentials.first)
-        editor.putString("password", credentials.second.toString())
-        editor.apply()
     }
 }
